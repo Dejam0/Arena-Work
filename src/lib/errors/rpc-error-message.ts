@@ -8,6 +8,8 @@ const messages: Record<string, string> = {
   NO_ACTIVE_SEASON: 'Não há temporada ativa no momento. Fale com um administrador.',
   SEASON_NOT_STARTED: 'A temporada ainda não começou. Confira a data de início na home.',
   SEASON_ENDED: 'O prazo da temporada terminou. Aguarde o administrador abrir a próxima.',
+  PENDING_CONFIRMATION_REQUIRED:
+    'Você tem um resultado aguardando sua resposta. Aceite ou recuse antes de registrar outra partida.',
   MATCH_NOT_FOUND: 'Partida não encontrada.',
   MATCH_NOT_PENDING: 'Essa partida não está mais aguardando confirmação.',
   MATCH_NOT_DISPUTED: 'Essa partida não está em disputa.',
