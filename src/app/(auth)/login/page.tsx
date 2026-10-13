@@ -71,6 +71,15 @@ export default async function LoginPage({
           </p>
         ) : null}
 
+        {status === 'password-reset' ? (
+          <p
+            role="status"
+            className="border-primary/40 bg-primary/10 text-primary mt-6 rounded-xl border p-3 text-sm leading-6"
+          >
+            Senha alterada! Entre com a sua nova senha.
+          </p>
+        ) : null}
+
         {isSignup ? (
           <form action={signupAction} className="mt-6 space-y-4">
             <label className="block text-sm font-medium">
@@ -151,6 +160,12 @@ export default async function LoginPage({
             >
               Entrar
             </button>
+            <Link
+              href="/forgot-password"
+              className="text-muted-foreground block text-center text-sm font-bold hover:text-white"
+            >
+              Esqueceu sua senha?
+            </Link>
           </form>
         )}
       </section>
