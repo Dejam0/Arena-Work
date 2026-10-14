@@ -12,6 +12,7 @@ if (existsSync(envPath)) {
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const confirmation = process.env.SEED_CONFIRM;
+const seedPassword = process.env.SEED_PASSWORD;
 
 const isPlaceholder = (value) =>
   !value || value.includes('YOUR_PROJECT') || value.includes('REPLACE_ME');
@@ -38,6 +39,17 @@ if (confirmation !== 'DEVELOPMENT_ONLY') {
   );
 }
 
+if (!seedPassword || seedPassword.length < 12) {
+  throw new Error(
+    [
+      'SEED_PASSWORD is missing or too short (minimum 12 characters).',
+      'Add a password of your own to the project root .env.local:',
+      'SEED_PASSWORD=<your password>',
+      'It is used for every seeded user. Never commit it.',
+    ].join('\n'),
+  );
+}
+
 const supabase = createClient(url, serviceKey, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
@@ -58,7 +70,7 @@ for (const [name, email] of users) {
   if (!user) {
     const { data, error } = await supabase.auth.admin.createUser({
       email,
-      password: 'ArenaDev123!',
+      password: seedPassword,
       email_confirm: true,
       user_metadata: { name },
       app_metadata: { approved: true },
@@ -157,4 +169,4 @@ for (const [requestId, aName, aScore, bName, bScore] of fixtures) {
 }
 
 console.info('Development seed complete.');
-console.info('Password for seeded users: ArenaDev123!');
+console.info('Seeded users use the SEED_PASSWORD from .env.local.');

@@ -258,7 +258,7 @@ supabase db push
 npm run seed
 ```
 
-Cria 4 jogadores, uma temporada ativa de exemplo (Outubro 2026, ajuste as datas no painel admin) e algumas partidas confirmadas. Todos usam a senha `ArenaDev123!`:
+Cria 4 jogadores, uma temporada ativa de exemplo (Outubro 2026, ajuste as datas no painel admin) e algumas partidas confirmadas. Todos usam a senha definida em `SEED_PASSWORD` no `.env.local` (mínimo 12 caracteres, escolha a sua e nunca faça commit dela):
 
 | E-mail                  | Papel                                  |
 | ----------------------- | -------------------------------------- |
