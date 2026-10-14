@@ -16,3 +16,6 @@ supabase/.temp
 .vercel
 .env*
 !.env.example
+
+# MCP local (copie de .mcp.example.json)
+.mcp.json
