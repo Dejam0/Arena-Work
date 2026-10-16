@@ -24,7 +24,12 @@ export function MatchCard({
   return (
     <article className="border-border bg-card rounded-2xl border p-4">
       <div className="flex items-center justify-between gap-3 text-xs">
-        <span className={`font-bold ${status.className}`}>{status.text}</span>
+        <span className="flex items-center gap-2">
+          <span className={`font-bold ${status.className}`}>{status.text}</span>
+          <span className="text-muted-foreground">
+            {match.pointsToWin ? `Jogo de ${match.pointsToWin}` : 'Sets'}
+          </span>
+        </span>
         <time dateTime={match.playedAt} className="text-muted-foreground">
           {formatDateTime(match.playedAt)}
         </time>

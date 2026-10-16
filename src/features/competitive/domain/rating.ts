@@ -19,7 +19,7 @@ export type CompetitiveStats = {
   losses: number;
   currentStreak: number;
   bestStreak: number;
-  /** Wins where the opponent did not take a single set (2×0 or 1×0). */
+  /** Wins where the opponent scored nothing: 11×0 / 21×0 games, or legacy 2×0 / 1×0 set results. */
   flawlessWins: number;
   /** Wins against someone in a higher tier at the time of the match. */
   giantSlayerWins: number;

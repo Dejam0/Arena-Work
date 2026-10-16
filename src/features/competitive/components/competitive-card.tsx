@@ -22,7 +22,7 @@ const achievementIcons: Record<AchievementKey, LucideIcon> = {
   streak_12: Crown,
   wins_25: Medal,
   wins_100: Shield,
-  flawless_10: Award,
+  flawless_3: Award,
   giant_slayer: Swords,
   champion: Trophy,
 };

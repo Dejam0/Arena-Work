@@ -19,6 +19,8 @@ export type MatchSummary = {
   status: MatchStatus;
   playedAt: string;
   createdBy: string;
+  /** 11 or 21 for games scored in points; null for legacy best-of-3 set results. */
+  pointsToWin: number | null;
   players: [MatchPlayer, MatchPlayer];
 };
 
@@ -27,6 +29,7 @@ const MATCH_SELECT = `
   status,
   played_at,
   created_by,
+  points_to_win,
   match_sides(side, score, match_participants(profile_id, profile:profiles(name, avatar_path, bad_loser)))
 `;
 
@@ -35,6 +38,7 @@ type MatchRow = {
   status: MatchStatus;
   played_at: string;
   created_by: string;
+  points_to_win: number | null;
   match_sides: {
     side: number;
     score: number;
@@ -68,6 +72,7 @@ function toSummary(match: MatchRow): MatchSummary[] {
       status: match.status,
       playedAt: match.played_at,
       createdBy: match.created_by,
+      pointsToWin: match.points_to_win,
       players: [a, b],
     },
   ];
