@@ -118,3 +118,26 @@ export function competitiveRanking(stats: Iterable<CompetitiveStats>): Competiti
     )
     .map((row, index) => ({ ...row, tier: tierFromPoints(row.points), position: index + 1 }));
 }
+
+export type WinsNeeded = {
+  /** Wins in a row from the current streak (streak bonus included): the fastest way up. */
+  inARow: number;
+  /** Wins at the base value only (+25 each), ignoring any streak bonus. */
+  withoutStreak: number;
+};
+
+/** How many wins separate `fromPoints` from `toPoints`. Losses are not projected. */
+export function winsNeeded(fromPoints: number, toPoints: number, currentStreak = 0): WinsNeeded {
+  if (toPoints <= fromPoints) return { inARow: 0, withoutStreak: 0 };
+
+  let points = fromPoints;
+  let streak = currentStreak;
+  let inARow = 0;
+  while (points < toPoints) {
+    streak += 1;
+    inARow += 1;
+    points += winValue(streak);
+  }
+
+  return { inARow, withoutStreak: Math.ceil((toPoints - fromPoints) / WIN_POINTS) };
+}
