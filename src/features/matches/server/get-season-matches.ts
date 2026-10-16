@@ -101,15 +101,49 @@ export async function getSeasonMatches(
   return ((data ?? []) as unknown as MatchRow[]).flatMap(toSummary);
 }
 
+// Keeps `id=in.(...)` URLs short enough for the API gateway.
+const IDS_PER_REQUEST = 100;
+
 /** Specific matches (e.g. referenced by notifications), in any season. RLS still applies. */
 export async function getMatchesByIds(
   supabase: SupabaseClient<Database>,
   ids: string[],
 ): Promise<Map<string, MatchSummary>> {
-  if (!ids.length) return new Map();
-  const { data, error } = await supabase.from('matches').select(MATCH_SELECT).in('id', ids);
+  const unique = [...new Set(ids)];
+  const chunks: string[][] = [];
+  for (let start = 0; start < unique.length; start += IDS_PER_REQUEST) {
+    chunks.push(unique.slice(start, start + IDS_PER_REQUEST));
+  }
+
+  const pages = await Promise.all(
+    chunks.map(async (chunk) => {
+      const { data, error } = await supabase.from('matches').select(MATCH_SELECT).in('id', chunk);
+      if (error) throw error;
+      return (data ?? []) as unknown as MatchRow[];
+    }),
+  );
+  return new Map(pages.flat().flatMap(toSummary).map((m) => [m.id, m]));
+}
+
+/** Every confirmed match of `playerId` in a season, newest first. */
+export async function getPlayerSeasonMatches(
+  supabase: SupabaseClient<Database>,
+  seasonId: string,
+  playerId: string,
+): Promise<MatchSummary[]> {
+  const { data, error } = await supabase
+    .from('match_participants')
+    .select('match_id, matches!inner(season_id, status)')
+    .eq('profile_id', playerId)
+    .eq('matches.season_id', seasonId)
+    .eq('matches.status', 'confirmed');
   if (error) throw error;
-  return new Map(((data ?? []) as unknown as MatchRow[]).flatMap(toSummary).map((m) => [m.id, m]));
+
+  const matches = await getMatchesByIds(
+    supabase,
+    (data ?? []).map((row) => row.match_id),
+  );
+  return [...matches.values()].sort((a, b) => b.playedAt.localeCompare(a.playedAt));
 }
 
 export async function getActiveSeason(supabase: SupabaseClient<Database>) {
